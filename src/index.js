@@ -1,5 +1,6 @@
 const owop = require("better-owop-js")
 
+const gol = require("./gol")
 const client = new owop.Client({
 	reconnect: true,
 	ws: "ws://dashnetpixels.duckdns.org/",
@@ -11,12 +12,16 @@ const commands = {
 		client.chat.send("Pong!")
 	},
 }
-//function tick() {}
+function tick() {
+	gol.default(client)
+}
 client.unsafe = true
 client.on("join", () => {
+	console.log("Ready")
 	client.chat.send("/pass Clicktastic")
 	client.chat.send("/nick Z's awesome bot")
-	//setInterval(tick, 1000)
+	client.world.move(416, 144)
+	setInterval(tick, 1000)
 })
 client.on("message", rawMsg => {
 	let msg = rawMsg.split(": ")
