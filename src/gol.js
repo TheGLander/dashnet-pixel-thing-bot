@@ -1,5 +1,6 @@
 //Game of life
 //Config
+const { client, protect } = require("./client")
 const startCoords = [416, 144]
 const width = 48
 const height = 48
@@ -40,7 +41,7 @@ class GameOfLife {
 	}
 }
 
-async function getPixels(client) {
+async function getPixels() {
 	const matrix = []
 	for (let x = startCoords[0]; x < startCoords[0] + width; x++) {
 		matrix.push([])
@@ -55,7 +56,7 @@ async function getPixels(client) {
 	return matrix
 }
 
-function setPixels(oldMatrix, matrix, client) {
+function setPixels(oldMatrix, matrix) {
 	for (const x in matrix)
 		for (const y in matrix[x])
 			if (oldMatrix[x][y] !== matrix[x][y])
@@ -66,10 +67,12 @@ function setPixels(oldMatrix, matrix, client) {
 					true
 				)
 }
+
 const gameOfLife = new GameOfLife(width, height)
-module.exports.default = async function (client) {
-	const oldState = await getPixels(client)
+
+setInterval(async function () {
+	const oldState = await getPixels()
 	gameOfLife.state = oldState
 	gameOfLife.step()
-	setPixels(oldState, gameOfLife.state, client)
-}
+	setPixels(oldState, gameOfLife.state)
+}, 1000)
