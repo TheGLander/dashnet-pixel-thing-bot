@@ -55,19 +55,21 @@ async function getPixels(client) {
 	return matrix
 }
 
-function setPixels(matrix, client) {
+function setPixels(oldMatrix, matrix, client) {
 	for (const x in matrix)
 		for (const y in matrix[x])
-			client.world.setPixel(
-				parseInt(x) + startCoords[0],
-				parseInt(y) + startCoords[1],
-				matrix[x][y] ? [255, 255, 255] : [0, 0, 0],
-				true
-			)
+			if (oldMatrix[x][y] !== matrix[x][y])
+				client.world.setPixel(
+					parseInt(x) + startCoords[0],
+					parseInt(y) + startCoords[1],
+					matrix[x][y] ? [255, 255, 255] : [0, 0, 0],
+					true
+				)
 }
 const gameOfLife = new GameOfLife(width, height)
 module.exports.default = async function (client) {
-	gameOfLife.state = await getPixels(client)
+	const oldState = await getPixels(client)
+	gameOfLife.state = oldState
 	gameOfLife.step()
-	setPixels(gameOfLife.state, client)
+	setPixels(oldState, gameOfLife.state, client)
 }
