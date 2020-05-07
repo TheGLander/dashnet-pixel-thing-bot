@@ -1,0 +1,23 @@
+{
+	"name": "dashnet-pixel-thing-bot",
+	"version": "1.0.0",
+	"description": "",
+	"private": true,
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/TheGLander/dashnet-pixel-thing-bot.git"
+	},
+	"author": "G lander",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/TheGLander/dashnet-pixel-thing-bot/issues"
+	},
+	"homepage": "https://github.com/TheGLander/dashnet-pixel-thing-bot#readme",
+	"dependencies": {
+		"better-owop-js": "^1.0.2"
+	}
+}
