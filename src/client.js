@@ -6,7 +6,7 @@ const client = new owop.Client({
 	controller: true,
 	log: false,
 })
-async function protect(position, size, onAttempt) {
+function protect(position, size, onAttempt) {
 	const promises = []
 	const pixelColors = {}
 	for (let x = position[0]; x < position[0] + size[0]; x++) {
