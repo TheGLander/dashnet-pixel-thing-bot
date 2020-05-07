@@ -1,4 +1,3 @@
-const gol = require("./gol")
 const { client } = require("./client")
 const commands = {
 	ping(args) {
@@ -11,6 +10,7 @@ client.on("join", () => {
 	client.chat.send("/pass Clicktastic")
 	client.chat.send("/nick Z's awesome bot")
 	client.world.move(416, 144)
+	require("./gol")
 })
 client.on("message", rawMsg => {
 	let msg = rawMsg.split(": ")
