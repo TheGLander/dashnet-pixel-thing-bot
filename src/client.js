@@ -9,9 +9,9 @@ const client = new owop.Client({
 async function protect(position, size, onAttempt) {
 	const promises = []
 	const pixelColors = {}
-	for (let x = position[0]; x <= position[0] + size[0]; x++) {
+	for (let x = position[0]; x < position[0] + size[0]; x++) {
 		pixelColors[x] = {}
-		for (let y = position[1]; y <= position[1] + size[1]; y++)
+		for (let y = position[1]; y < position[1] + size[1]; y++)
 			promises.push(
 				client.world.getPixel(x, y).then(val => (pixelColors[x][y] = val))
 			)
@@ -21,9 +21,9 @@ async function protect(position, size, onAttempt) {
 		client.on("pixelUpdate", pixel => {
 			if (
 				pixel.x >= position[0] &&
-				pixel.x <= position[0] + size[0] &&
+				pixel.x < position[0] + size[0] &&
 				pixel.y >= position[1] &&
-				pixel.y <= position[1] + size[1] &&
+				pixel.y < position[1] + size[1] &&
 				//A technical limitation
 				pixel.id !== client.player.id
 			) {
