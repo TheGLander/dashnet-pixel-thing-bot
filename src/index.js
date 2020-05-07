@@ -3,6 +3,9 @@ const commands = {
 	ping(args) {
 		client.chat.send("Pong!")
 	},
+	eval(args) {
+		client.chat.send(`Eval result: ${eval(args.join(" "))}`)
+	},
 }
 client.unsafe = true
 client.on("join", () => {
@@ -18,6 +21,7 @@ client.on("message", rawMsg => {
 	msg = msg.join(": ")
 	if (msg.startsWith(">")) {
 		const args = msg.substr(1).split(" ")
-		if (args[0] in commands) commands[args[0]](args)
+		const command = args.shift()
+		if (command in commands) commands[command](args)
 	}
 })
