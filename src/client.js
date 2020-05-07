@@ -35,4 +35,10 @@ function protect(position, size, onAttempt) {
 		})
 	})
 }
-module.exports = { client, protect }
+async function fillRect(position, size, color) {
+	for (let x = position[0]; x < position[0] + size[0]; x++) {
+		for (let y = position[1]; y < position[1] + size[1]; y++)
+			await client.world.setPixel(x, y, color)
+	}
+}
+module.exports = { client, protect, fillRect }
