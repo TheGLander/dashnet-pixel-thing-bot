@@ -3,7 +3,10 @@ const commands = {
 	ping(args) {
 		client.chat.send("Pong!")
 	},
-	eval(args) {
+	eval(args, rawMsg) {
+		if (rawMsg.indexOf("Z man") === -1) {
+			client.chat.send("Hey! You must be Z to use >eval")
+		}
 		client.chat.send(`Eval result: ${eval(args.join(" "))}`)
 	},
 }
@@ -22,6 +25,6 @@ client.on("message", rawMsg => {
 	if (msg.startsWith(">")) {
 		const args = msg.substr(1).split(" ")
 		const command = args.shift()
-		if (command in commands) commands[command](args)
+		if (command in commands) commands[command](args, rawMsg)
 	}
 })
