@@ -5,6 +5,7 @@ const startCoords = [416, 144]
 const width = 48
 const height = 48
 
+let paused = false
 class GameOfLife {
 	state = []
 	getNeighbors(position) {
@@ -69,8 +70,14 @@ function setPixels(oldMatrix, matrix) {
 }
 
 const gameOfLife = new GameOfLife(width, height)
-
+protect([450, 192], [7, 7], () => {
+	paused = true
+})
+protect([457, 192], [7, 7], () => {
+	paused = false
+})
 setInterval(async function () {
+	if (paused) return
 	const oldState = await getPixels()
 	gameOfLife.state = oldState
 	gameOfLife.step()
