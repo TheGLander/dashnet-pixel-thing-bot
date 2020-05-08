@@ -7,7 +7,13 @@ const commands = {
 		if (rawMsg.indexOf("Z man") === -1) {
 			client.chat.send("Hey! You must be Z to use >eval")
 		}
-		client.chat.send(`Eval result: ${eval(args.join(" "))}`)
+		let result
+		try {
+			result = eval(args.join(" "))
+		} catch (err) {
+			result = err
+		}
+		client.chat.send(`Eval result: ${result}`)
 	},
 }
 client.unsafe = true
