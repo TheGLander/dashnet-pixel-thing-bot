@@ -17,20 +17,26 @@ function protect(position, size, onAttempt) {
 			)
 	}
 	Promise.all(promises).then(() => {
-		let forceOff = false
 		client.on("pixelUpdate", pixel => {
 			if (
 				pixel.x >= position[0] &&
 				pixel.x < position[0] + size[0] &&
 				pixel.y >= position[1] &&
-				pixel.y < position[1] + size[1] &&
+				pixel.y < position[1] + size[1]
 				//A technical limitation
-				pixel.id !== client.player.id
 			) {
-				let prevent = false
-				if (onAttempt) prevent = onAttempt(pixel)
-				if (!prevent)
-					client.world.setPixel(pixel.x, pixel.y, pixelColors[pixel.x][pixel.y])
+				if (pixel.id === client.player.id) {
+					pixelColors[pixel.x][pixel.y] = pixel.color
+				} else {
+					let prevent = false
+					if (onAttempt) prevent = onAttempt(pixel)
+					if (!prevent)
+						client.world.setPixel(
+							pixel.x,
+							pixel.y,
+							pixelColors[pixel.x][pixel.y]
+						)
+				}
 			}
 		})
 	})
