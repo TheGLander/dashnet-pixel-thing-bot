@@ -3,13 +3,13 @@ const commands = {
 	ping(args) {
 		client.chat.send("Pong!")
 	},
-	eval(args, rawMsg) {
+	async eval(args, rawMsg) {
 		if (rawMsg.indexOf("Z man") === -1) {
 			client.chat.send("Hey! You must be Z to use >eval")
 		}
 		let result
 		try {
-			result = eval(args.join(" "))
+			result = await eval(`(async () => ${args.join(" ")})()`)
 		} catch (err) {
 			result = err
 		}
@@ -17,6 +17,7 @@ const commands = {
 	},
 }
 client.unsafe = true
+globalThis.cUtils = require("./client")
 client.on("join", () => {
 	console.log("Ready")
 	client.chat.send("/pass Clicktastic")
