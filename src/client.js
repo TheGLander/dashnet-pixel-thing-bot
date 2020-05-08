@@ -1,5 +1,5 @@
 const owop = require("better-owop-js")
-
+const { arraysEqual } = require("./helpers")
 const client = new owop.Client({
 	reconnect: true,
 	ws: "ws://dashnetpixels.duckdns.org/",
@@ -47,4 +47,27 @@ async function fillRect(position, size, color) {
 			await client.world.setPixel(x, y, color)
 	}
 }
-module.exports = { client, protect, fillRect }
+
+async function saveImg(position, size) {
+	const matrix = []
+	for (let x = position[0]; x < position[0] + size[0]; x++) {
+		matrix.push([])
+		for (let y = position[1]; y < position[1] + size[1]; y++)
+			matrix[x - position[0]].push(await client.world.getPixel(x, y))
+	}
+	return matrix
+}
+
+async function writeImg(position, matrix) {
+	const oldMatrix = await saveImg(position, [matrix.length, matrix[0].length])
+	for (const x in matrix)
+		for (const y in matrix[x])
+			if (!arraysEqual(oldMatrix[x][y], matrix[x][y]))
+				await client.world.setPixel(
+					parseInt(x) + position[0],
+					parseInt(y) + position[1],
+					matrix[x][y],
+					true
+				)
+}
+module.exports = { client, protect, fillRect, saveImg, writeImg }
