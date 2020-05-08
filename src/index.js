@@ -1,7 +1,27 @@
-const { client } = require("./client")
+const { client, saveImg, writeImg } = require("./client")
 const commands = {
 	ping(args) {
 		client.chat.send("Pong!")
+	},
+	async clone(args) {
+		args = args.splice(0, 3)
+		for (const i in args) {
+			try {
+				args[i] = JSON.parse(args[i])
+			} catch {
+				client.chat.send("Malformed input")
+				return
+			}
+			if (!(args[i] instanceof Array) || args[i].length !== 2) {
+				client.chat.send("Malformed input")
+				return
+			}
+		}
+		if (args.length !== 3) {
+			client.chat.send("Malformed input")
+			return
+		}
+		await writeImg(args[2], await saveImg(args[0], args[1]))
 	},
 	async eval(args, rawMsg) {
 		if (rawMsg.indexOf("Z man") === -1) {
