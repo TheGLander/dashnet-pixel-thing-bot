@@ -6,7 +6,7 @@ const client = new owop.Client({
 	controller: true,
 	log: false,
 })
-function protect(position, size, onAttempt) {
+function protect(position, size, onAttempt, postAttempt) {
 	const promises = []
 	const pixelColors = {}
 	for (let x = position[0]; x < position[0] + size[0]; x++) {
@@ -28,14 +28,15 @@ function protect(position, size, onAttempt) {
 				if (pixel.id === client.player.id) {
 					pixelColors[pixel.x][pixel.y] = pixel.color
 				} else {
-					let prevent = false
-					if (onAttempt) prevent = await onAttempt(pixel)
-					if (!prevent)
+					let revive = true
+					if (onAttempt) revive = (await onAttempt(pixel)) ?? revive
+					if (!revive)
 						client.world.setPixel(
 							pixel.x,
 							pixel.y,
 							pixelColors[pixel.x][pixel.y]
 						)
+					if (postAttempt) await postAttempt(pixel, revive)
 				}
 			}
 		})
@@ -59,10 +60,17 @@ async function saveImg(position, size) {
 }
 
 async function writeImg(position, matrix) {
-	const oldMatrix = await saveImg(position, [matrix.length, matrix[0].length])
 	for (const x in matrix)
 		for (const y in matrix[x])
-			if (!arraysEqual(oldMatrix[x][y], matrix[x][y]))
+			if (
+				!arraysEqual(
+					await client.world.getPixel(
+						parseInt(x) + position[0],
+						parseInt(y) + position[1]
+					),
+					matrix[x][y]
+				)
+			)
 				await client.world.setPixel(
 					parseInt(x) + position[0],
 					parseInt(y) + position[1],
