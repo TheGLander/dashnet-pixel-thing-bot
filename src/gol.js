@@ -1,6 +1,6 @@
 //Game of life
 //Config
-const { client, protect } = require("./client")
+const { client, protect, fillRect } = require("./client")
 const startCoords = [416, 144]
 const width = 48
 const height = 48
@@ -70,11 +70,20 @@ function setPixels(oldMatrix, matrix) {
 }
 
 const gameOfLife = new GameOfLife(width, height)
-protect([450, 192], [7, 7], () => {
-	paused = true
-})
-protect([457, 192], [7, 7], () => {
-	paused = false
+protect([457, 192], [7, 7], async pixel => {
+	paused = !paused
+	await fillRect([458, 193], [5, 5], [212, 212, 212])
+	if (paused) {
+		//Draw pause button
+		await fillRect([459, 194], [1, 3], [53, 53, 53])
+		await fillRect([461, 194], [1, 3], [53, 53, 53])
+	} else {
+		//Draw go button
+		await fillRect([459, 193], [1, 5], [53, 53, 53])
+		await fillRect([460, 194], [1, 3], [53, 53, 53])
+		await fillRect([461, 195], [1, 1], [53, 53, 53])
+	}
+	return pixel.x >= 458 && pixel.x < 463 && pixel.y >= 193 && pixel.y < 199
 })
 setInterval(async function () {
 	if (paused) return

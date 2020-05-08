@@ -17,7 +17,7 @@ function protect(position, size, onAttempt) {
 			)
 	}
 	Promise.all(promises).then(() => {
-		client.on("pixelUpdate", pixel => {
+		client.on("pixelUpdate", async pixel => {
 			if (
 				pixel.x >= position[0] &&
 				pixel.x < position[0] + size[0] &&
@@ -29,7 +29,7 @@ function protect(position, size, onAttempt) {
 					pixelColors[pixel.x][pixel.y] = pixel.color
 				} else {
 					let prevent = false
-					if (onAttempt) prevent = onAttempt(pixel)
+					if (onAttempt) prevent = await onAttempt(pixel)
 					if (!prevent)
 						client.world.setPixel(
 							pixel.x,
